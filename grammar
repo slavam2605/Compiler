@@ -1,0 +1,47 @@
+<Program> = [ <Function> | <FunctionDefinition> ]*
+<Function> = <Type> <lexem> '(' <ArgsList> ')' <BlockCode>
+<FunctionDefinition> = <Type> <lexem> '(' <ArgsList> ')' ';'
+<Type> = ("int" | "char") [ '*' ]*
+<ArgsList> = "" | <Type> <lexem> [ ',' <Type> <lexem> ]*
+<BlockCode> = '{' <LinesCode> '}'
+<LinesCode> =  [ <LineCode> '\n' ]*
+<LineCode> = <BlockCode> | <VarDefinition> ';' | <Expression> ';' | "return" <Expression> ';' | "if" '(' <Expression> ')' <LineCode> 
+		   | "for" '('<Expression> ';' <Expression> ';' <Expression>')' <LineCode> 
+<VarDefinition> = <Type> <lexem>
+<Expression> = <Term> '=' <Expression> | <OrExpression>
+<OrExpression> = <AndExpression> [ "||" <AndExpression> ]*
+<AndExpression> = <EqualExpression> [ "&&" <EqualExpression> ]*
+<EqualExpression> = <CompareExpression> [ ("==" | "!=") <CompareExpression> ]*
+<CompareExpression> = <PlusExpression> [ (">" | "<" | ">=" | "<=") <PlusExpression> ]*
+<PlusExpression> = <MultExpression> [ ('+' | '-') <MultExpression> ]*
+<MultExpression> = <Term> [ ('*' | '/' | '%') <Term> ]*
+<Term> = '*' <Term> | '&' <Term> | '!' <Term> | '(' <Type> ')' <Term> | <Term> '[' <Expression> ']'  | <Factor>
+<Factor> = <lexem> '(' <ExprList> ')' | <lexem> | <number> | "'" <symbol> "'" | '"' <string> '"' | '(' <Expression> ')'
+<ExprList> = "" | <Expression> [ ',' <Expression> ]*
+
+TODO list:
+ok	1) сигнатура функций
+ok	2) boolean выражения (==, !=, >, <, >=, <=, &&, ||, !)
+ok	3) lvalue / rvalue
+ok	4.1) for
+	4.2) while
+	4.3) do while
+	4.4) else
+	4.5) switch
+	5) оптимизации
+ok	6) комментарии
+	7) vararg
+ok	8) ret в конце функции
+	9) const
+ok	10) ленивый порядок вычисления boolean выражений (&&, ||)
+Препроцессор:
+	1) #include
+ok	2) #define без аргументов
+	3) #define с аргументами
+ok	4) \ для переноса строки
+Несоответствия:
+	1) нет инициализации при объявлении переменной
+ok	2) нет for без {}
+	3) [][] для T* (видимо, двумерные массивы) 
+	4) *=, +=, -=, /=, ++, --, ...
+	5) нет глобальных переменных
